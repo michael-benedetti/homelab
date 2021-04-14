@@ -2,8 +2,7 @@
 curl -sfL https://get.k3s.io | sh -
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
-echo "Waiting for k3s..."
-while kubectl get node | grep NotReady; do echo "..."; sleep 1; done
+while kubectl get node | grep NotReady; do echo "Waiting for k3s..."; sleep 1; done
 
 # metallb install
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
