@@ -11,8 +11,5 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manife
 kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 kubectl apply -f yaml/metallb-config.yaml
 
-# pvc
-kubectl apply -f yaml/pvc.yaml
-
 # unifi-controller
 kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/deployment.yaml
