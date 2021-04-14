@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: heimdall-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/heimdall"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: heimdall-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  volumeName: heimdall-pv
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: heimdall
+  labels:
+    app: heimdall
+spec:
+  volumes:
+  - name: heimdall-config
+    persistentVolumeClaim:
+      claimName: heimdall-pvc
+  containers:
+    - name: heimdall
+      image: ghcr.io/linuxserver/heimdall
+      volumeMounts:
+      - name: heimdall-config
+        mountPath: /config
+      ports:
+      - containerPort: 80
+        name: http
+      - containerPort: 443
+        name: https
+      volumeMounts:
+      - mountPath: "/config"
+        name: heimdall-config
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: heimdall
+  labels:
+    app: heimdall
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: 443
+      protocol: TCP
+  selector:
+    app: heimdall
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster

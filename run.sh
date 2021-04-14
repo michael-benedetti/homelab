@@ -11,6 +11,13 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 kubectl apply -f yaml/metallb-config.yaml
 
 # unifi-controller
+echo "Deploying unifi-controller..."
 kubectl create namespace unifi
 while ! kubectl -n unifi get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
 kubectl apply -f yaml/unifi-controller/unifi-controller.yaml --namespace=unifi
+
+# heimdall
+echo "Deploying heimdall..."
+kubectl create namespace heimdall
+while ! kubectl -n heimdall get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
+kubectl apply -f yaml/heimdall/heimdall.yaml --namespace=heimdall
