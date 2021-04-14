@@ -15,5 +15,7 @@ kubectl apply -f yaml/metallb-config.yaml
 kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/namespace.yaml
 while ! kubectl -n unifi get serviceaccounts | grep default; do echo "Waiting for default service account..."; sleep 1; done
 kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/pv.yaml
+while ! kubectl get pv | grep Available; do echo "Waiting for pv to be available..."; sleep 1; done
+kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/pvc.yaml
 kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/pod.yaml
 kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/service.yaml
