@@ -12,4 +12,8 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 kubectl apply -f yaml/metallb-config.yaml
 
 # unifi-controller
-kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/namespace.yaml
+while ! kubectl -n unifi get serviceaccounts | grep default; do echo "Waiting for default service account..."; sleep 1; done
+kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/pv.yaml
+kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/pod.yaml
+kubectl apply -f https://raw.githubusercontent.com/michael-benedetti/unifi-controller-k8s/master/service.yaml
