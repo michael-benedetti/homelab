@@ -83,6 +83,7 @@ spec:
   selector:
     app: unifi
   type: LoadBalancer
+  loadBalancerIP: 192.168.1.17
   externalTrafficPolicy: Cluster
 ---
 kind: Service
@@ -106,4 +107,5 @@ spec:
   selector:
     app: unifi
   type: LoadBalancer
+  loadBalancerIP: 192.168.1.17
   externalTrafficPolicy: Cluster
