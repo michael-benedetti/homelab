@@ -31,3 +31,10 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm install -n prometheus kube-prometheus-stack prometheus-community/kube-prometheus-stack
 kubectl -n prometheus patch svc "kube-prometheus-stack-grafana" -p '{"spec": {"type": "LoadBalancer", "loadBalancerIP": "192.168.1.19"}}'
+
+# statping
+echo "Deploying statping..."
+kubectl create namespace statping
+while ! kubectl -n statping get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
+echo "Deploying statping..."
+kubectl apply -f yaml/statping/statping.yaml
