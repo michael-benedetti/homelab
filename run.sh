@@ -37,4 +37,4 @@ echo "Deploying statping..."
 kubectl create namespace statping
 while ! kubectl -n statping get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
 echo "Deploying statping..."
-kubectl apply -f yaml/statping/statping.yaml
+kubectl apply -f yaml/statping/statping.yaml --namespace=statping
