@@ -5,6 +5,10 @@ chmod 600 ~/.kube/config
 
 while kubectl get node | grep NotReady; do echo "Waiting for k3s..."; sleep 1; done
 
+# reconfigure default storageClass
+kubectl patch storageClass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl apply -f yaml/default-storageClass.yaml
+
 # metallb install
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
@@ -36,5 +40,16 @@ kubectl -n prometheus patch svc "kube-prometheus-stack-grafana" -p '{"spec": {"t
 echo "Deploying statping..."
 kubectl create namespace statping
 while ! kubectl -n statping get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
-echo "Deploying statping..."
 kubectl apply -f yaml/statping/statping.yaml --namespace=statping
+
+# gitlab
+echo "Deploying GitLab..."
+kubectl create namespace gitlab
+helm repo add gitlab https://charts.gitlab.io/
+helm install gitlab gitlab/gitlab \
+  --set global.hosts.domain=bluefootedboobie.com \
+  --set certmanager.install=false \
+  --set global.ingress.configureCertmanager=false \
+  --set gitlab-runner.install=false \
+  -n gitlab
+kubectl -n gitlab patch svc "gitlab-nginx-ingress-controller" -p '{"spec": {"loadBalancerIP": "192.168.1.21"}}'
