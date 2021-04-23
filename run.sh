@@ -82,6 +82,7 @@ helm install gitlab gitlab/gitlab \
   --set certmanager.install=false \
   --set global.ingress.configureCertmanager=false \
   --set global.ingress.tls.secretName=wildcard-cert \
+  --set gitlab-runner.install=false \
   -n gitlab
 kubectl -n gitlab patch svc "gitlab-nginx-ingress-controller" -p '{"spec": {"loadBalancerIP": "192.168.1.21"}}'
 
