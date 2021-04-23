@@ -1,3 +1,33 @@
+# CA setup
+if [ ! -f secrets/wildcard.bluefootedboobie.com.crt ]; then
+  mkdir secrets
+  cd secrets
+  openssl genrsa -des3 -out root.key 2048
+  openssl req -x509 -new -nodes -key root.key -sha256 -days 36500 -subj "/C=US/ST=MD/L=Severna Park/O=Dis/CN=Private Homelab Authority" -out root.crt
+
+  openssl genrsa -out wildcard.bluefootedboobie.com.key 2048
+  openssl req -new -out wildcard.bluefootedboobie.com.csr \
+  -key wildcard.bluefootedboobie.com.key \
+  -config ../config/opensslsan.cnf
+
+  openssl x509 -req -in wildcard.bluefootedboobie.com.csr \
+  -CA root.crt \
+  -CAkey root.key \
+  -CAcreateserial \
+  -out wildcard.bluefootedboobie.com.crt \
+  -days 36500 \
+  -sha256 \
+  -extensions v3_req \
+  -extfile ../config/opensslsan.cnf
+
+  sudo mkdir /usr/local/share/ca-certificates/homelab
+  sudo cp root.crt /usr/local/share/ca-certificates/homelab/homelab.crt
+  sudo chmod 644 /usr/local/share/ca-certificates/homelab/homelab.crt
+  sudo update-ca-certificates
+
+  cd ..
+fi
+
 # k3s install
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik --disable servicelb" sh - 
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
@@ -45,11 +75,15 @@ kubectl apply -f yaml/statping/statping.yaml --namespace=statping
 # gitlab
 echo "Deploying GitLab..."
 kubectl create namespace gitlab
+kubectl -n gitlab create secret tls wildcard-cert --cert=$(pwd)/secrets/wildcard.bluefootedboobie.com.crt --key=$(pwd)/secrets/wildcard.bluefootedboobie.com.key
 helm repo add gitlab https://charts.gitlab.io/
 helm install gitlab gitlab/gitlab \
   --set global.hosts.domain=bluefootedboobie.com \
   --set certmanager.install=false \
   --set global.ingress.configureCertmanager=false \
-  --set gitlab-runner.install=false \
+  --set global.ingress.tls.secretName=wildcard-cert \
   -n gitlab
 kubectl -n gitlab patch svc "gitlab-nginx-ingress-controller" -p '{"spec": {"loadBalancerIP": "192.168.1.21"}}'
+
+echo "==========================================================================================================="
+echo "Don't forget to import secrets/root.crt to your browser and any other hosts that need to communicate via TLS!!!"

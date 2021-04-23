@@ -1,0 +1,15 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = XX
+ST = XX
+L = XX
+O = Wildcard Homelab Inc
+OU = IT
+CN = *.bluefootedboobie.com
+[v3_req]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = *.bluefootedboobie.com
