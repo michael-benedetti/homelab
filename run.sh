@@ -86,4 +86,6 @@ helm install gitlab gitlab/gitlab \
 kubectl -n gitlab patch svc "gitlab-nginx-ingress-controller" -p '{"spec": {"loadBalancerIP": "192.168.1.21"}}'
 
 echo "==========================================================================================================="
+GL_ROOT_PW=$(kubectl -n gitlab get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo)
+echo "Gitlab root password: $(echo $GL_ROOT_PW)"
 echo "Don't forget to import secrets/root.crt to your browser and any other hosts that need to communicate via TLS!!!"
