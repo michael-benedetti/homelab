@@ -100,6 +100,6 @@ if [ "$d3_deploy" == "Y" ] || [ "$d3_deploy" == "" ]; then
 	kubectl create namespace d3compare
 	read -p "Enter Blizzard API Client ID: " D3_CLIENT_ID
 	read -p "Enter Blizzard API Client Secret: " D3_CLIENT_SECRET
-	kubectl -n d3compare create secret generic d3-client-creds --from-literal=$D3_ClIENT_ID --from-literal=D3_CLIENT_SECRET=$D3_CLIENT_SECRET
+	kubectl -n d3compare create secret generic d3-client-creds --from-literal=D3_CLIENT_ID=$D3_CLIENT_ID --from-literal=D3_CLIENT_SECRET=$D3_CLIENT_SECRET
 	kubectl -n d3compare apply -f yaml/d3compare/d3compare.yaml
 fi
