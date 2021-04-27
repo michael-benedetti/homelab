@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: d3compare
+  labels:
+    app: d3compare
+spec:
+  containers:
+    - name: d3compare
+      image: egdetti/d3compare:1.31.0
+      env:
+        - name: D3_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: d3-client-creds
+              key: D3_CLIENT_ID
+        - name: D3_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: d3-client-creds
+              key: D3_CLIENT_SECRET
+      ports:
+        - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: d3compare
+  labels:
+    app: d3compare
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: d3compare
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.1.22

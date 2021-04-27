@@ -92,3 +92,14 @@ echo "==========================================================================
 GL_ROOT_PW=$(kubectl -n gitlab get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo)
 echo "Gitlab root password: $(echo $GL_ROOT_PW)"
 echo "Don't forget to import secrets/root.crt to your browser and any other hosts that need to communicate via TLS!!!"
+
+# D3Compare
+read -p "Do you want to deploy D3Compare (Y/n) ?" d3_deploy
+if [ "$d3_deploy" == "Y" ] || [ "$d3_deploy" == "" ]; then
+	echo "Deploying D3Comapre..."
+	kubectl create namespace d3compare
+	read -p "Enter Blizzard API Client ID: " D3_CLIENT_ID
+	read -p "Enter Blizzard API Client Secret: " D3_CLIENT_SECRET
+	kubectl -n d3compare create secret generic d3-client-creds --from-literal=$D3_ClIENT_ID --from-literal=D3_CLIENT_SECRET=$D3_CLIENT_SECRET
+	kubectl -n d3compare apply -f yaml/d3compare/d3compare.yaml
+fi
