@@ -35,6 +35,10 @@ chmod 600 ~/.kube/config
 
 while kubectl get node | grep NotReady; do echo "Waiting for k3s..."; sleep 1; done
 
+echo "To join an additional node to the cluster, copy and paste the following on the node:"
+echo "curl -sfL https://get.k3s.io | K3S_URL=https://mother.bluefootedboobie.com:6443 K3S_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token) sh -"
+read -p "Press Enter when you are ready to continue..."
+
 # reconfigure default storageClass
 kubectl patch storageClass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 kubectl apply -f yaml/default-storageClass.yaml
@@ -94,6 +98,8 @@ echo "Gitlab root password: $(echo $GL_ROOT_PW)"
 echo "Don't forget to import secrets/root.crt to your browser and any other hosts that need to communicate via TLS!!!"
 
 # D3Compare
+echo
+echo
 read -p "Do you want to deploy D3Compare (Y/n) ?" d3_deploy
 if [ "$d3_deploy" == "Y" ] || [ "$d3_deploy" == "" ]; then
 	echo "Deploying D3Comapre..."
