@@ -101,7 +101,7 @@ echo "Don't forget to import secrets/root.crt to your browser and any other host
 echo
 echo
 read -p "Do you want to deploy D3Compare (Y/n) ?" d3_deploy
-if [ "$d3_deploy" == "Y" ] || [ "$d3_deploy" == "" ]; then
+if [ "${d3_deploy^^}" == "Y" ] || [ "$d3_deploy" == "" ]; then
 	echo "Deploying D3Comapre..."
 	kubectl create namespace d3compare
 	read -p "Enter Blizzard API Client ID: " D3_CLIENT_ID
