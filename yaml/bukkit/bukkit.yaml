@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bukkit-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/bukkit"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bukkit-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  volumeName: bukkit-pv
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bukkit
+  labels:
+    app: bukkit
+spec:
+  volumes:
+    - name: bukkit
+      persistentVolumeClaim:
+        claimName: bukkit-pvc
+  containers:
+    - name: bukkit
+      image: egdetti/bukkit:1.15.2-alpine-v3
+      ports:
+      - containerPort: 25565
+        name: server
+      - containerPort: 25575
+        name: rcon
+      volumeMounts:
+      - name: bukkit
+        mountPath: /bukkit
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bukkit
+  labels:
+    app: bukkit
+spec:
+  ports:
+    - name: server
+      port: 25565
+      targetPort: 25565
+      protocol: TCP
+    - name: rcon
+      port: 25575
+      targetPort: 25575
+      protocol: TCP
+  selector:
+    app: bukkit
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.1.25
