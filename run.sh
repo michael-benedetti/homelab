@@ -55,6 +55,12 @@ kubectl create namespace unifi
 while ! kubectl -n unifi get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
 kubectl apply -f yaml/unifi-controller/unifi-controller.yaml --namespace=unifi
 
+# pihole
+echo "Deploying pihole..."
+kubectl create namespace pihole
+while ! kubectl -n pihole get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
+kubectl apply -f yaml/pihole/pihole.yaml --namespace=pihole
+
 # heimdall
 echo "Deploying heimdall..."
 kubectl create namespace heimdall

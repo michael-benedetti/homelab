@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/unifi"
+    path: "/data/homelab/unifi"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

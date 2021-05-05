@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/bukkit"
+    path: "/data/homelab/bukkit"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

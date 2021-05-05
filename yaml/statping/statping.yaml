@@ -39,7 +39,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/statping"
+    path: "/data/homelab/statping"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

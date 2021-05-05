@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/heimdall"
+    path: "/data/homelab/heimdall"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

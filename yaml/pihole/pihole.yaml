@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/pihole/etc-pihole"
+    path: "/data/homelab/pihole/etc-pihole"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -39,7 +39,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/pihole/etc-dnsmasq.d"
+    path: "/data/homelab/pihole/etc-dnsmasq.d"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
