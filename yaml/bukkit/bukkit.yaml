@@ -39,7 +39,7 @@ spec:
         claimName: bukkit-pvc
   containers:
     - name: bukkit
-      image: egdetti/bukkit:1.15.2-alpine-v3
+      image: egdetti/paper:1.1
       ports:
       - containerPort: 25565
         name: server
