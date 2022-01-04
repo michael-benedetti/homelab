@@ -84,6 +84,12 @@ kubectl apply -f yaml/statping/statping.yaml --namespace=statping
 while ! kubectl -n statping get pod statping | grep Running; do echo "Waiting for statping container to be running..."; sleep 1; done
 kubectl -n statping exec statping -- sh -c "echo 192.168.1.21 gitlab.bluefootedboobie.com >> /etc/hosts"
 
+# bamboo
+echo "Deploying Bamboo..."
+kubectl create namespace bamboo
+while ! kubectl -n bamboo get serviceaccount | grep default; do echo "Waiting for service account to be ready..."; sleep 1; done
+kubectl apply -f yaml/bamboo/bamboo.yaml --namespace=bamboo
+
 # gitlab
 echo "Deploying GitLab..."
 kubectl create namespace gitlab
