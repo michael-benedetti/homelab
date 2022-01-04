@@ -14,5 +14,5 @@ Currently, the following services are included:
 
 Two additional yamls are provided but not deployed automatically in `run.sh`:
 
-- [A Simply Minecraft Paper Server](https://papermc.io/)
+- [A Simple Minecraft Paper Server](https://papermc.io/)
 - [DVWA](https://dvwa.co.uk/)
